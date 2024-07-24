@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cours;
-use App\Http\Resources\CourResource;
-use App\Http\Requests\StoreCourRequest;
-use App\Http\Requests\UpdateCourRequest;
+use App\Models\Salle;
+use App\Http\Resources\SalleResource;
+use App\Http\Requests\StoreSalleRequest;
+use App\Http\Requests\UpdateSalleRequest;
 use Inertia\Inertia;
 
-class CourController extends Controller
+class SalleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $query = Cours::query();
+        $query = Salle::query();
         $sortField = request("sort_field",'email');
         $sortDirection = request("sort_direction", "desc");
         if(request("name")){
@@ -26,11 +26,11 @@ class CourController extends Controller
             $query->where("status",request("status"));
         }
 
-        $cours = $query->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
+        $salles = $query->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
         
     
-        return Inertia::render('Cour/Index',[
-            'cours' => CourResource::collection($cours),
+        return Inertia::render('Salle/Index',[
+            'salles' => SalleResource::collection($salles),
             'queryParams' => request()->query() ?: null,
         ]);
     }
@@ -46,7 +46,7 @@ class CourController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCourRequest $request)
+    public function store(StoreSalleRequest $request)
     {
         //
     }
@@ -54,7 +54,7 @@ class CourController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Cour $cour)
+    public function show(Salle $salle)
     {
         //
     }
@@ -62,7 +62,7 @@ class CourController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Cour $cour)
+    public function edit(Salle $salle)
     {
         //
     }
@@ -70,7 +70,7 @@ class CourController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCourRequest $request, Cour $cour)
+    public function update(UpdateSalleRequest $request, Salle $salle)
     {
         //
     }
@@ -78,7 +78,7 @@ class CourController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cour $cour)
+    public function destroy(Salle $salle)
     {
         //
     }

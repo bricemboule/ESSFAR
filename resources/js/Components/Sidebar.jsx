@@ -82,28 +82,17 @@ const Sidebar = () => {
                     </li>
                 </Link>
 
-                <li
-                    className="flex items-center py-3 px-2 space-x-4 hover:rounded hover:cursor-pointer 
+                <Link href={route("salle.index")}>
+                    <li
+                        className="flex items-center py-3 px-2 space-x-4 hover:rounded hover:cursor-pointer 
         hover:text-white hover:bg-sky-400"
-                >
-                    <FaSchool />
-                    <span className="hidden md:inline ">Salles de classe</span>
-                </li>
-
-                {/*<li
-                    className="flex items-center py-3 px-2 space-x-4 hover:rounded hover:cursor-pointer 
-        hover:text-white hover:bg-sky-400"
-                >
-                    <FaBox />
-                    <span className="hidden md:inline ">Products</span>
-                </li>*/}
-                {/*<li
-                    className="flex items-center py-3 px-2 space-x-4 hover:rounded hover:cursor-pointer 
-        hover:text-white hover:bg-sky-400"
-                >
-                    <FaCog />
-                    <span className="hidden md:inline ">Settings</span>
-                </li>*/}
+                    >
+                        <FaSchool />
+                        <span className="hidden md:inline ">
+                            Salles de classe
+                        </span>
+                    </li>
+                </Link>
             </ul>
         </div>
     );
