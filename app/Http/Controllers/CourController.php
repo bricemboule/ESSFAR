@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cours;
 use App\Http\Resources\CourResource;
+use App\Http\Resources\EnseignantResource;
+use App\Models\Enseignant;
 use App\Http\Requests\StoreCourRequest;
 use App\Http\Requests\UpdateCourRequest;
 use Inertia\Inertia;
@@ -16,20 +18,20 @@ class CourController extends Controller
     public function index()
     {
         $query = Cours::query();
-        $sortField = request("sort_field",'email');
-        $sortDirection = request("sort_direction", "desc");
-        if(request("name")){
-            $query->where("intitule", "like","%".request("name")."%");
+      
+        $sortDirection = request("sort_direction", "asc");
+        if(request("intitule")){
+            $query->where("intitule", "like","%".request("intitule")."%");
         }
        
         if(request("status")){
             $query->where("status",request("status"));
         }
 
-        $cours = $query->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
+        $cours = $query->orderBy($sortDirection)->paginate(10)->onEachSide(1);
         
     
-        return Inertia::render('Cour/Index',[
+        return Inertia::render('Admin/Cour/Index',[
             'cours' => CourResource::collection($cours),
             'queryParams' => request()->query() ?: null,
         ]);
@@ -40,7 +42,11 @@ class CourController extends Controller
      */
     public function create()
     {
-        //
+        $enseignants = Enseignant::all();
+       
+        return Inertia::render('Admin/Cour/Create',[
+            'enseignants' => EnseignantResource::collection($enseignants)
+        ]);
     }
 
     /**

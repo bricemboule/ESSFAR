@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('telephone2')->nullable();
             $table->string('email');
             $table->string('password');
-            $table->boolean('status');
+            $table->boolean('status')->default(1);
             $table->foreignId('classe_id')->constrained('classes');
             $table->string('photo')->nullable();
             $table->timestamps();

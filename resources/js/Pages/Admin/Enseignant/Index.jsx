@@ -1,13 +1,24 @@
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
+import { USER_STATUS_CLASS_MAP, USER_STATUS_TEXT_MAP } from "@/Constante";
 import ThemeContextProvider from "@/context/ThemeContextProvider";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { IoMdAdd } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Index({ auth, enseignants, queryParams = null }) {
     queryParams = queryParams || {};
+    const deleteEnseignant = (enseignant) => {
+        if (!window.confirm("Voulez vous supprimer cet enseignant ?")) {
+            return;
+        }
+        router.delete(route("enseignant.destroy", enseignant.id));
+    };
 
     const searcheFieldChanged = (name, value) => {
         if (value) {
@@ -54,6 +65,14 @@ function Index({ auth, enseignants, queryParams = null }) {
                 <div className="py-12">
                     <div className="max-w-7xl max-auto sm:px-6 lg:px-8">
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shaddow-sm sm:rounded-lg">
+                            <div className="flex gap-2 p-2 text-xl">
+                                <Link href={route("enseignant.create")}>
+                                    <PrimaryButton>
+                                        <IoMdAdd size={30} />
+                                        Nouvel Enseignant
+                                    </PrimaryButton>
+                                </Link>
+                            </div>
                             <div className="p-6 text-gray-900 dark:text-gray-100">
                                 <div className="overflow-auto">
                                     <table className="w-full text-xl text-left rtl:text-righr text-gray-500 dark:text-gray-400">
@@ -86,12 +105,7 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                 </TableHeading>
                                                 <th className="p-3">Prenoms</th>
                                                 <th className="p-3">Email</th>
-                                                <th className="px-3 py-3">
-                                                    Date Naissance
-                                                </th>
-                                                <th className="px-3 py-3">
-                                                    Lieu Naissance
-                                                </th>
+
                                                 <th className="p-3">
                                                     Téléphone 1
                                                 </th>
@@ -153,8 +167,7 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                         }
                                                     />
                                                 </th>
-                                                <th className="p-3"></th>
-                                                <th className="p-3"></th>
+
                                                 <th className="p-3">
                                                     <TextInput
                                                         className="w-full"
@@ -271,17 +284,34 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                             {enseignant.id}
                                                         </td>
                                                         <td className="px-3 py-3">
-                                                            {
-                                                                enseignant.intitule
-                                                            }
+                                                            {enseignant.nom}
                                                         </td>
                                                         <td className="px-3 py-3">
-                                                            {enseignant.cycle}
+                                                            {enseignant.prenom}
                                                         </td>
 
                                                         <td className="px-3 py-3">
-                                                            {""}
+                                                            {enseignant.email}
                                                         </td>
+
+                                                        <td className="p-3">
+                                                            {
+                                                                enseignant.telephone1
+                                                            }
+                                                        </td>
+                                                        <td className="p-3">
+                                                            {
+                                                                enseignant.telephone2
+                                                            }
+                                                        </td>
+                                                        <th className="p-3">
+                                                            {enseignant.grade}
+                                                        </th>
+                                                        <th className="p-3">
+                                                            <button className="text-green-500">
+                                                                Liste de cours
+                                                            </button>
+                                                        </th>
                                                         <td className="px-3 py-3">
                                                             <span
                                                                 className={
@@ -311,15 +341,16 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                             >
                                                                 <HiOutlinePencilSquare />
                                                             </Link>
-                                                            <Link
-                                                                href={route(
-                                                                    "enseignant.destroy",
-                                                                    enseignant.id
-                                                                )}
+                                                            <button
+                                                                onClick={() => {
+                                                                    deleteEnseignant(
+                                                                        enseignant
+                                                                    );
+                                                                }}
                                                                 className=" font-medium text-red-600 dark:text-red-500 hover:text-underline mx-1 "
                                                             >
                                                                 <RiDeleteBin6Line />
-                                                            </Link>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 )

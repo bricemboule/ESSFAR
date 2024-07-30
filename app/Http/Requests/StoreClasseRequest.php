@@ -11,7 +11,7 @@ class StoreClasseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreClasseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'intitule' => ['string'],
+            'cycle' => ['string']
         ];
     }
 }

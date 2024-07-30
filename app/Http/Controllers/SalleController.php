@@ -16,20 +16,16 @@ class SalleController extends Controller
     public function index()
     {
         $query = Salle::query();
-        $sortField = request("sort_field",'email');
-        $sortDirection = request("sort_direction", "desc");
-        if(request("name")){
-            $query->where("intitule", "like","%".request("name")."%");
-        }
+       
        
         if(request("status")){
             $query->where("status",request("status"));
         }
 
-        $salles = $query->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
+        $salles = $query->paginate(10)->onEachSide(1);
         
     
-        return Inertia::render('Salle/Index',[
+        return Inertia::render('Admin/Salle/Index',[
             'salles' => SalleResource::collection($salles),
             'queryParams' => request()->query() ?: null,
         ]);
@@ -40,7 +36,7 @@ class SalleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Salle/Create');
     }
 
     /**
@@ -48,7 +44,9 @@ class SalleController extends Controller
      */
     public function store(StoreSalleRequest $request)
     {
-        //
+        Salle::create($request->validated());
+
+        return to_route('salle.index')->with('success', "Salle \"$request->intitule\" ajoutée avec succes");
     }
 
     /**
@@ -64,7 +62,9 @@ class SalleController extends Controller
      */
     public function edit(Salle $salle)
     {
-        //
+        return Inertia::render('Admin/Salle/Edite',[
+            'salle' => new SalleResource($salle)
+        ]);
     }
 
     /**
@@ -72,7 +72,9 @@ class SalleController extends Controller
      */
     public function update(UpdateSalleRequest $request, Salle $salle)
     {
-        //
+        $salle->update($request->validated());
+
+        return to_route('salle.index')->with('success', "Salle \"$request->nomSalle\" modifiée avec succès");
     }
 
     /**
@@ -80,6 +82,10 @@ class SalleController extends Controller
      */
     public function destroy(Salle $salle)
     {
-        //
+        $nom = $salle->nomSalle;
+
+        $salle->delete();
+
+        return to_route('salle.index')->with('success', "Salle \"$nom\" supprimée vavec succès");
     }
 }

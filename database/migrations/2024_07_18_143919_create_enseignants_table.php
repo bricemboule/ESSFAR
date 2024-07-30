@@ -18,8 +18,10 @@ return new class extends Migration
             $table->integer('telephone1');
             $table->integer('telephone2')->nullable();
             $table->string('email');
-            $table->date('dataNaissance');
+            $table->string('grade');
+            $table->date('dateNaissance');
             $table->string('lieu_naissance');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

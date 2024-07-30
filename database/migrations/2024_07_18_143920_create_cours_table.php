@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('intitule');
             $table->float('volumeHoraire');
-            $table->float('effectue');
+            $table->float('effectue')->default(0);
             $table->float('restant');
             $table->boolean('status');
             $table->foreignId('enseignant_id')->constrained('enseignants');

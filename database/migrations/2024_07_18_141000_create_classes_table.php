@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('intitule');
             $table->string('cycle');
-            $table->boolean('status');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

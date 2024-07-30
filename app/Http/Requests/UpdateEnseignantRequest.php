@@ -11,7 +11,7 @@ class UpdateEnseignantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class UpdateEnseignantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nom' => ['string', 'required'],
+            'prenom' => ['string', 'required'],
+            'telephone1' => ['integer', 'required'],
+            'dateNaissance' => ['date', 'required'],
+            'lieu_naissance' => ['required', 'string'],
+            'email' => ['required', 'string', 'email'],
+            'grade' => ['required', 'string']
         ];
     }
 }

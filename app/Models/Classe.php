@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Classe extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'intitule', 'cycle','status'
+    ];
     public function documents(){
         return $this->hasMany(Document::class);
     }

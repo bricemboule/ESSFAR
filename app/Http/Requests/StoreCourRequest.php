@@ -11,7 +11,7 @@ class StoreCourRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreCourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'intitule' => ['required', 'string'],
+            'volumeHoraire' => ['required', 'float'],
+            'effectue' => ['required', 'float'],
+            'restant' => ['required', 'float'],
+            
         ];
     }
 }

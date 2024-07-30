@@ -20,11 +20,10 @@ class User extends Authenticatable
         'nom', 
         'prenom',
         'telephone1',
-        'telephone2', 
         'email', 
         'password', 
         'status', 
-        'role_id'
+        'role'
     ];
 
     /**

@@ -1,12 +1,15 @@
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
-import TableHeading from "@/Components/TableHeading";
-import TextInput from "@/Components/TextInput";
+import { USER_STATUS_CLASS_MAP, USER_STATUS_TEXT_MAP } from "@/Constante";
 import ThemeContextProvider from "@/context/ThemeContextProvider";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { IoMdAdd } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
-function Index({ auth, cours, queryParams = null }) {
+function Index({ auth, salles, success, queryParams = null }) {
     queryParams = queryParams || {};
 
     const searcheFieldChanged = (name, value) => {
@@ -16,7 +19,7 @@ function Index({ auth, cours, queryParams = null }) {
             delete queryParams[name];
         }
 
-        router.get(route("cour.index", queryParams));
+        router.get(route("salle.index", queryParams));
     };
 
     const onKeyPress = (name, e) => {
@@ -37,7 +40,14 @@ function Index({ auth, cours, queryParams = null }) {
             queryParams.sort_direction = "asc";
         }
 
-        router.get(route("cour.index", queryParams));
+        router.get(route("salle.index", queryParams));
+    };
+
+    const deleteSalle = (salle) => {
+        if (!window.confirm("Voulez vous supprimer ce salle ?")) {
+            return;
+        }
+        router.delete(route("salle.destroy", salle.id));
     };
 
     return (
@@ -46,48 +56,41 @@ function Index({ auth, cours, queryParams = null }) {
                 user={auth.user}
                 header={
                     <h2 className="font-semibold text-xl leading-tight">
-                        cours
+                        salles
                     </h2>
                 }
             >
-                <Head title="cours" />
+                <Head title="salles" />
                 <div className="py-12">
                     <div className="max-w-7xl max-auto sm:px-6 lg:px-8">
+                        {success && (
+                            <div className="bg-emerald-500 p-4 text-white text-xl rounded">
+                                {success}
+                            </div>
+                        )}
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shaddow-sm sm:rounded-lg">
                             <div className="p-6 text-gray-900 dark:text-gray-100">
+                                <div className="flex gap-2 p-2 text-xl">
+                                    <Link href={route("salle.create")}>
+                                        <PrimaryButton>
+                                            <IoMdAdd size={30} />
+                                            Add Salle
+                                        </PrimaryButton>
+                                    </Link>
+                                </div>
                                 <div className="overflow-auto">
                                     <table className="w-full text-xl text-left rtl:text-righr text-gray-500 dark:text-gray-400">
                                         <thead className="text-sm text-gray-700 capitalize bg-gray-50 dark:gn-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                                             <tr className="text-nowrap">
-                                                <TableHeading
-                                                    name="id"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    ID
-                                                </TableHeading>
+                                                <th>ID</th>
 
                                                 <th className="p-3">
                                                     Intitule
                                                 </th>
-                                                <th className="p-3">
-                                                    Volume Horaire
-                                                </th>
-                                                <th className="p-3">
-                                                    Effectué
-                                                </th>
+
                                                 <th className="px-3 py-3">
-                                                    Restant
+                                                    Capacité
                                                 </th>
-                                                <th className="px-3 py-3">
-                                                    Enseignant
-                                                </th>
-                                                <th className="p-3">Classe</th>
 
                                                 <th className="p-3">Status</th>
 
@@ -100,52 +103,8 @@ function Index({ auth, cours, queryParams = null }) {
                                             <tr className="text-nowrap">
                                                 <th className="px-3 py-3"></th>
 
-                                                <th className="p-3">
-                                                    <TextInput
-                                                        className="w-full"
-                                                        placeholder="..."
-                                                        defaultValue={
-                                                            queryParams.name
-                                                        }
-                                                        onBlur={(e) =>
-                                                            searcheFieldChanged(
-                                                                "nom",
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        onKeyPress={(e) =>
-                                                            onKeyPress(
-                                                                "name",
-                                                                e
-                                                            )
-                                                        }
-                                                    />
-                                                </th>
                                                 <th className="p-3"></th>
                                                 <th className="p-3"></th>
-                                                <th className="p-3"></th>
-                                                <th className="p-3"></th>
-                                                <th className="p-3">
-                                                    <TextInput
-                                                        className="w-full"
-                                                        placeholder="..."
-                                                        defaultValue={
-                                                            queryParams.name
-                                                        }
-                                                        onBlur={(e) =>
-                                                            searcheFieldChanged(
-                                                                "telephone1",
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        onKeyPress={(e) =>
-                                                            onKeyPress(
-                                                                "name",
-                                                                e
-                                                            )
-                                                        }
-                                                    />
-                                                </th>
 
                                                 <th className="px-3 py-3">
                                                     <SelectInput
@@ -166,7 +125,7 @@ function Index({ auth, cours, queryParams = null }) {
                                                             Terminé
                                                         </option>
                                                         <option value="0">
-                                                            En cours
+                                                            En salles
                                                         </option>
                                                         <option value="0">
                                                             En attente
@@ -179,36 +138,33 @@ function Index({ auth, cours, queryParams = null }) {
                                         </thead>
 
                                         <tbody>
-                                            {cours.data.map((cour) => (
+                                            {salles.data.map((salle) => (
                                                 <tr
-                                                    key={cour.id}
+                                                    key={salle.id}
                                                     className="bg-white text-sm border-b dark:bg-gray-800 dark:border-gray-700"
                                                 >
                                                     <td className="px-3 py-3">
-                                                        {cour.id}
+                                                        {salle.id}
                                                     </td>
                                                     <td className="px-3 py-3">
-                                                        {cour.intitule}
+                                                        {salle.nomSalle}
                                                     </td>
                                                     <td className="px-3 py-3">
-                                                        {cour.cycle}
+                                                        {salle.capacite}
                                                     </td>
 
-                                                    <td className="px-3 py-3">
-                                                        {""}
-                                                    </td>
                                                     <td className="px-3 py-3">
                                                         <span
                                                             className={
                                                                 "px-2 py-1 rounded text-white " +
                                                                 USER_STATUS_CLASS_MAP[
-                                                                    cour.status
+                                                                    salle.status
                                                                 ]
                                                             }
                                                         >
                                                             {
                                                                 USER_STATUS_TEXT_MAP[
-                                                                    cour.status
+                                                                    salle.status
                                                                 ]
                                                             }
                                                         </span>
@@ -217,22 +173,23 @@ function Index({ auth, cours, queryParams = null }) {
                                                     <td className="px-3 py-4 flex gap-2">
                                                         <Link
                                                             href={route(
-                                                                "cour.edit",
-                                                                cour.id
+                                                                "salle.edit",
+                                                                salle.id
                                                             )}
                                                             className=" font-medium text-green-500 dark:text-blue-500 hover:text-underline mx-1 "
                                                         >
                                                             <HiOutlinePencilSquare />
                                                         </Link>
-                                                        <Link
-                                                            href={route(
-                                                                "cour.destroy",
-                                                                cour.id
-                                                            )}
+                                                        <button
+                                                            onClick={() =>
+                                                                deleteSalle(
+                                                                    salle
+                                                                )
+                                                            }
                                                             className=" font-medium text-red-600 dark:text-red-500 hover:text-underline mx-1 "
                                                         >
                                                             <RiDeleteBin6Line />
-                                                        </Link>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -240,7 +197,7 @@ function Index({ auth, cours, queryParams = null }) {
                                     </table>
                                 </div>
 
-                                <Pagination links={cours.meta.links} />
+                                <Pagination links={salles.meta.links} />
                             </div>
                         </div>
                     </div>

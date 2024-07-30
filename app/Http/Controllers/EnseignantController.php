@@ -17,7 +17,7 @@ class EnseignantController extends Controller
     {
         $query = Enseignant::query();
         $sortField = request("sort_field",'email');
-        $sortDirection = request("sort_direction", "desc");
+        $sortDirection = request("sort_direction", "asc");
         if(request("name")){
             $query->where("intitule", "like","%".request("name")."%");
         }
@@ -29,7 +29,7 @@ class EnseignantController extends Controller
         $enseignant = $query->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
         
     
-        return Inertia::render('Enseignant/Index',[
+        return Inertia::render('Admin/Enseignant/Index',[
             'enseignants' => EnseignantResource::collection($enseignant),
             'queryParams' => request()->query() ?: null,
         ]);
@@ -40,7 +40,7 @@ class EnseignantController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Enseignant/Create');
     }
 
     /**
@@ -48,7 +48,12 @@ class EnseignantController extends Controller
      */
     public function store(StoreEnseignantRequest $request)
     {
-        //
+   
+        $data = $request->validated();
+
+        Enseignant::create($data);
+
+        return to_route('enseignant.index')->with('success', "Enseignant \"$request->nom\" crée avec succes");
     }
 
     /**
@@ -64,7 +69,9 @@ class EnseignantController extends Controller
      */
     public function edit(Enseignant $enseignant)
     {
-        //
+        return Inertia::render('Admin/Enseignant/Edit',[
+            'enseignant' => new EnseignantResource($enseignant)
+        ]);
     }
 
     /**
@@ -72,7 +79,9 @@ class EnseignantController extends Controller
      */
     public function update(UpdateEnseignantRequest $request, Enseignant $enseignant)
     {
-        //
+        $enseignant->update($request->validated());
+
+        return to_route('enseignant.index')->with('success', "Enseignant \"$enseignant->nom\" modifié");
     }
 
     /**
@@ -80,6 +89,8 @@ class EnseignantController extends Controller
      */
     public function destroy(Enseignant $enseignant)
     {
-        //
+        $enseignant->delete();
+
+        return to_route('enseignant.index')->with('success', "Enseignant \"$enseignant->nom\"supprimé");
     }
 }

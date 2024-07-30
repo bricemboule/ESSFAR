@@ -1,10 +1,15 @@
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
+import { USER_STATUS_CLASS_MAP, USER_STATUS_TEXT_MAP } from "@/Constante";
 import ThemeContextProvider from "@/context/ThemeContextProvider";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { IoMdAdd } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Index({ auth, classes, queryParams = null }) {
     queryParams = queryParams || {};
@@ -40,6 +45,13 @@ function Index({ auth, classes, queryParams = null }) {
         router.get(route("classe.index", queryParams));
     };
 
+    const deleteClasse = (classe) => {
+        if (!window.confirm("Voulez vous supprimer ce classe ?")) {
+            return;
+        }
+        router.delete(route("classe.destroy", classe.id));
+    };
+
     return (
         <ThemeContextProvider>
             <AuthenticatedLayout
@@ -54,6 +66,14 @@ function Index({ auth, classes, queryParams = null }) {
                 <div className="py-12">
                     <div className="max-w-7xl max-auto sm:px-6 lg:px-8">
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shaddow-sm sm:rounded-lg">
+                            <div className="flex gap-2 p-2 text-xl">
+                                <Link href={route("classe.create")}>
+                                    <PrimaryButton>
+                                        <IoMdAdd size={30} />
+                                        Add Classe
+                                    </PrimaryButton>
+                                </Link>
+                            </div>
                             <div className="p-6 text-gray-900 dark:text-gray-100">
                                 <div className="overflow-auto">
                                     <table className="w-full text-xl text-left rtl:text-righr text-gray-500 dark:text-gray-400">
@@ -71,18 +91,7 @@ function Index({ auth, classes, queryParams = null }) {
                                                 >
                                                     ID
                                                 </TableHeading>
-                                                <TableHeading
-                                                    name="intitule"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Intitule
-                                                </TableHeading>
+                                                <th>Intitule</th>
                                                 <th className="px-3 py-3">
                                                     Cycle
                                                 </th>
@@ -99,18 +108,7 @@ function Index({ auth, classes, queryParams = null }) {
                                                 >
                                                     Nombres étudiants
                                                 </TableHeading>
-                                                <TableHeading
-                                                    name="status"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Status
-                                                </TableHeading>
+                                                <th>Status</th>
 
                                                 <th className="px-3 py-3">
                                                     Actions
@@ -220,15 +218,16 @@ function Index({ auth, classes, queryParams = null }) {
                                                         >
                                                             <HiOutlinePencilSquare />
                                                         </Link>
-                                                        <Link
-                                                            href={route(
-                                                                "classe.destroy",
-                                                                classe.id
-                                                            )}
+                                                        <button
+                                                            onClick={() =>
+                                                                deleteClasse(
+                                                                    classe
+                                                                )
+                                                            }
                                                             className=" font-medium text-red-600 dark:text-red-500 hover:text-underline mx-1 "
                                                         >
                                                             <RiDeleteBin6Line />
-                                                        </Link>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}

@@ -16,22 +16,17 @@ class ClasseController extends Controller
     public function index()
     {
         $query = Classe::query();
-        $sortField = request("sort_field",'email');
-        $sortDirection = request("sort_direction", "desc");
-        if(request("name")){
-            $query->where("intitule", "like","%".request("name")."%");
-        }
        
-        if(request("status")){
-            $query->where("status",request("status"));
-        }
+        //$sortDirection = request("sort_direction", "desc");
+       
+    
 
-        $classes = $query->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
+        $classes = $query->paginate(10)->onEachSide(1);
         
     
-        return Inertia::render('Classe/Index',[
+        return Inertia::render('Admin/Classe/Index',[
             'classes' => ClasseResource::collection($classes),
-            'queryParams' => request()->query() ?: null,
+            //'queryParams' => request()->query() ?: null,
         ]);
     }
 
@@ -40,7 +35,7 @@ class ClasseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Classe/Create');
     }
 
     /**
@@ -48,7 +43,9 @@ class ClasseController extends Controller
      */
     public function store(StoreClasseRequest $request)
     {
-        //
+        Classe::create($request->validated());
+
+        return to_route('classe.index')->with('success', 'classe crée avec succe');
     }
 
     /**
@@ -64,7 +61,11 @@ class ClasseController extends Controller
      */
     public function edit(Classe $classe)
     {
-        //
+        return Inertia::render('Admin/Classe/Edit',[
+            'classe' => new ClasseResource($classe)
+        ]
+        
+    );
     }
 
     /**
@@ -72,7 +73,9 @@ class ClasseController extends Controller
      */
     public function update(UpdateClasseRequest $request, Classe $classe)
     {
-        //
+        $classe->update($request->validated());
+
+        return to_route('classe.index')->with('success', "Classe \"$classe->intitule\"supprime avec succes");
     }
 
     /**
@@ -80,6 +83,10 @@ class ClasseController extends Controller
      */
     public function destroy(Classe $classe)
     {
-        //
+        $nom = $classe->intitule;
+        $classe->delete();
+
+        return to_route('classe.index')->with('success', "Classe \"$nom\" suprimé avec succes");
+
     }
 }

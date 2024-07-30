@@ -39,7 +39,6 @@ class DatabaseSeeder extends Seeder
             'nom' => 'Admin',
             'prenom' => 'brice',
             'telephone1' => '693326522',
-            'telephone2' => '676956536',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'status' => true,

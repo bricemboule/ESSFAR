@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->integer('telephone1');
-            $table->integer('telephone2')->nullable();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->boolean('status');
             $table->foreignId('role_id')->constrained('roles');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password')->default(bcrypt('12345678'));
+            $table->boolean('status')->default(1);
+            
             $table->rememberToken();
             $table->timestamps();
         });
