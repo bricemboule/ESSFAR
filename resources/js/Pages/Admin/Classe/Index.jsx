@@ -12,6 +12,7 @@ import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Index({ auth, classes, queryParams = null }) {
+    console.log(classes);
     queryParams = queryParams || {};
 
     const searcheFieldChanged = (name, value) => {
@@ -70,7 +71,7 @@ function Index({ auth, classes, queryParams = null }) {
                                 <Link href={route("classe.create")}>
                                     <PrimaryButton>
                                         <IoMdAdd size={30} />
-                                        Add Classe
+                                        Classe
                                     </PrimaryButton>
                                 </Link>
                             </div>
@@ -117,23 +118,23 @@ function Index({ auth, classes, queryParams = null }) {
                                         </thead>
                                         <thead className="text-sm text-gray-700 capitalize bg-gray-50 dark:gn-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                                             <tr className="text-nowrap">
-                                                <th className="px-3 py-3"></th>
-                                                <th className="px-3 py-3">
+                                                <th className="p-3"></th>
+                                                <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
-                                                        placeholder="Entrer la classe ..."
+                                                        className="w-full p-2 border-2"
+                                                        placeholder="classe ..."
                                                         defaultValue={
                                                             queryParams.name
                                                         }
                                                         onBlur={(e) =>
                                                             searcheFieldChanged(
-                                                                "nom",
+                                                                "intitule",
                                                                 e.target.value
                                                             )
                                                         }
                                                         onKeyPress={(e) =>
                                                             onKeyPress(
-                                                                "name",
+                                                                "intitule",
                                                                 e
                                                             )
                                                         }
@@ -141,26 +142,25 @@ function Index({ auth, classes, queryParams = null }) {
                                                 </th>
                                                 <th className="px-3 py-3">
                                                     <SelectInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         defaultValue={
-                                                            queryParams.status
+                                                            queryParams.cycle
                                                         }
                                                         onChange={(e) =>
                                                             searcheFieldChanged(
-                                                                "status",
+                                                                "cycle",
                                                                 e.target.value
                                                             )
                                                         }
                                                     >
                                                         <option value="">
-                                                            Selectionner un
-                                                            cycle
+                                                            cycle...
                                                         </option>
-                                                        <option value="1">
+                                                        <option value="Licence">
                                                             {" "}
                                                             Licence
                                                         </option>
-                                                        <option value="0">
+                                                        <option value="Master">
                                                             Master
                                                         </option>
                                                     </SelectInput>

@@ -1,13 +1,23 @@
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
+import {
+    ETUDIANT_STATUS_CLASS_MAP,
+    ETUDIANT_STATUS_TEXT_MAP,
+} from "@/Constante";
 import ThemeContextProvider from "@/context/ThemeContextProvider";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, Link, router, useForm } from "@inertiajs/react";
+import { useState } from "react";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Index({ auth, etudiants, queryParams = null }) {
     queryParams = queryParams || {};
+    const [file, setFile] = useState(null);
+    const { post, processing, errors } = useForm();
 
     const searcheFieldChanged = (name, value) => {
         if (value) {
@@ -16,7 +26,26 @@ function Index({ auth, etudiants, queryParams = null }) {
             delete queryParams[name];
         }
 
-        router.get(route("etudiant.index", queryParams));
+        router.get(route("admin.etudiant.index", queryParams));
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    //fnction pour soumettre le fichier a emporter
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!file) return alert("Aucun fichier sélectionné");
+
+        const formData = new FormData();
+        formData.append("file", file);
+        for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]); // 🔍 Vérifie si "file" est bien ajouté
+        }
+        post(route("etudiant.import"), formData, {
+            forceFormData: true,
+        });
     };
 
     const onKeyPress = (name, e) => {
@@ -30,14 +59,20 @@ function Index({ auth, etudiants, queryParams = null }) {
             if (queryParams.sort_direction === "asc") {
                 queryParams.sort_direction = "desc";
             } else {
-                queryParams.sort_direction = "desc";
+                queryParams.sort_direction = "asc";
             }
         } else {
             queryParams.sort_field = name;
             queryParams.sort_direction = "asc";
         }
 
-        router.get(route("etudiant.index", queryParams));
+        router.get(route("admin.etudiant.index", queryParams));
+    };
+    const deleteStudent = (etudiant) => {
+        if (!window.confirm("Voulez vous supprimer cet etudiant ?")) {
+            return;
+        }
+        router.delete(route("admin.etudiant.destroy", etudiant.id));
     };
 
     return (
@@ -54,36 +89,43 @@ function Index({ auth, etudiants, queryParams = null }) {
                 <div className="py-12">
                     <div className="max-w-7xl max-auto sm:px-6 lg:px-8">
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shaddow-sm sm:rounded-lg">
+                            <div className="flex gap-2 p-2 text-xl">
+                                <Link href={route("admin.etudiant.create")}>
+                                    <PrimaryButton>
+                                        Ajouter un étudiant
+                                    </PrimaryButton>
+                                </Link>
+                                ou
+                                <form
+                                    onSubmit={(e) => handleSubmit(e)}
+                                    encType="multipart/form-data"
+                                >
+                                    <input
+                                        type="file"
+                                        name="file"
+                                        accept=".csv,.txt,.xlsx"
+                                        onChange={handleFileChange}
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="text-red-500"
+                                    >
+                                        Importer
+                                    </button>
+                                </form>
+                                {errors.file && (
+                                    <p className="error">{errors.file}</p>
+                                )}
+                            </div>
                             <div className="p-6 text-gray-900 dark:text-gray-100">
                                 <div className="overflow-auto">
                                     <table className="w-full text-xl text-left rtl:text-righr text-gray-500 dark:text-gray-400">
                                         <thead className="text-sm text-gray-700 capitalize bg-gray-50 dark:gn-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                                             <tr className="text-nowrap">
-                                                <TableHeading
-                                                    name="id"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    ID
-                                                </TableHeading>
-                                                <th className="p-3"></th>
-                                                <TableHeading
-                                                    name="matricule"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Matricule
-                                                </TableHeading>
+                                                <th>ID</th>
+
+                                                <th>Matricule</th>
                                                 <TableHeading
                                                     name="nom"
                                                     sort_field={
@@ -96,98 +138,30 @@ function Index({ auth, etudiants, queryParams = null }) {
                                                 >
                                                     Noms
                                                 </TableHeading>
-                                                <TableHeading
-                                                    name="prenom"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Prenoms
-                                                </TableHeading>
-                                                <TableHeading
-                                                    name="email"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Email
-                                                </TableHeading>
-                                                <th className="px-3 py-3">
+                                                <th>Prenoms</th>
+                                                <th>Email</th>
+                                                <th className="p-3">
                                                     Date Naissance
                                                 </th>
-                                                <th className="px-3 py-3">
+                                                <th className="p-3">
                                                     Lieu Naissance
                                                 </th>
-                                                <TableHeading
-                                                    name="telephone1"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Téléphone 1
-                                                </TableHeading>
-                                                <TableHeading
-                                                    name="telephone2"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
+                                                <th>Téléphone 1</th>
+                                                <th className="p-3">
                                                     Téléphone 2
-                                                </TableHeading>
-
-                                                <TableHeading
-                                                    name="classe"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Classe
-                                                </TableHeading>
-                                                <TableHeading
-                                                    name="status"
-                                                    sort_field={
-                                                        queryParams.sort_field
-                                                    }
-                                                    sort_direction={
-                                                        queryParams.sort_direction
-                                                    }
-                                                    sortChanged={sortChanged}
-                                                >
-                                                    Status
-                                                </TableHeading>
-
-                                                <th className="px-3 py-3">
-                                                    Actions
                                                 </th>
+                                                <th className="p-3">Classe</th>
+                                                <th className="p-3">Status</th>
+                                                <th className="p-3">Actions</th>
                                             </tr>
                                         </thead>
                                         <thead className="text-sm text-gray-700 capitalize bg-gray-50 dark:gn-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                                             <tr className="text-nowrap">
-                                                <th className="px-3 py-3"></th>
                                                 <th className="p-3"></th>
+
                                                 <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         placeholder="..."
                                                         defaultValue={
                                                             queryParams.name
@@ -208,7 +182,7 @@ function Index({ auth, etudiants, queryParams = null }) {
                                                 </th>
                                                 <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         placeholder="..."
                                                         defaultValue={
                                                             queryParams.name
@@ -228,10 +202,9 @@ function Index({ auth, etudiants, queryParams = null }) {
                                                     />
                                                 </th>
                                                 <th className="p-3"></th>
-                                                <th className="p-3"></th>
                                                 <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         placeholder="..."
                                                         defaultValue={
                                                             queryParams.name
@@ -251,19 +224,39 @@ function Index({ auth, etudiants, queryParams = null }) {
                                                     />
                                                 </th>
                                                 <th className="p-3"></th>
-                                                <th className="px-3 py-3"></th>
-
-                                                <th className="px-3 py-3"></th>
+                                                <th className="p-3"></th>
 
                                                 <th className="p-3">
+                                                    <TextInput
+                                                        className="w-full p-2 border-2"
+                                                        placeholder="..."
+                                                        defaultValue={
+                                                            queryParams.name
+                                                        }
+                                                        onBlur={(e) =>
+                                                            searcheFieldChanged(
+                                                                "telephone1",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        onKeyPress={(e) =>
+                                                            onKeyPress(
+                                                                "telephone",
+                                                                e
+                                                            )
+                                                        }
+                                                    />
+                                                </th>
+                                                <th className="p-3"></th>
+                                                <th className="p-3">
                                                     <SelectInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         defaultValue={
                                                             queryParams.status
                                                         }
                                                         onChange={(e) =>
                                                             searcheFieldChanged(
-                                                                "status",
+                                                                "classe",
                                                                 e.target.value
                                                             )
                                                         }
@@ -299,69 +292,107 @@ function Index({ auth, etudiants, queryParams = null }) {
                                                         </option>
                                                     </SelectInput>
                                                 </th>
+                                                <th className="px-3 py-3"></th>
+
+                                                <th className="px-3 py-3"></th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            {etudiants.data.map((etudiant) => (
-                                                <tr
-                                                    key={etudiant.id}
-                                                    className="bg-white text-sm border-b dark:bg-gray-800 dark:border-gray-700"
-                                                >
-                                                    <td className="px-3 py-3">
-                                                        {etudiant.id}
-                                                    </td>
-                                                    <td className="px-3 py-3">
-                                                        {etudiant.intitule}
-                                                    </td>
-                                                    <td className="px-3 py-3">
-                                                        {etudiant.cycle}
-                                                    </td>
+                                            {etudiants.data.map(
+                                                (etudiant, index) => (
+                                                    <tr
+                                                        key={index + 1}
+                                                        className="bg-white text-sm border-b dark:bg-gray-800 dark:border-gray-700"
+                                                    >
+                                                        <td className="px-3 py-3">
+                                                            {etudiant.id}
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {etudiant.matricule}
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {etudiant.nom}
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {etudiant.prenom}
+                                                        </td>
 
-                                                    <td className="px-3 py-3">
-                                                        {""}
-                                                    </td>
-                                                    <td className="px-3 py-3">
-                                                        <span
-                                                            className={
-                                                                "px-2 py-1 rounded text-white " +
-                                                                USER_STATUS_CLASS_MAP[
-                                                                    etudiant
-                                                                        .status
-                                                                ]
-                                                            }
-                                                        >
+                                                        <td className="px-3 py-3">
                                                             {
-                                                                USER_STATUS_TEXT_MAP[
-                                                                    etudiant
-                                                                        .status
-                                                                ]
+                                                                etudiant.user
+                                                                    .email
                                                             }
-                                                        </span>
-                                                    </td>
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {
+                                                                etudiant.dateNaissance
+                                                            }
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {
+                                                                etudiant.lieuNaissance
+                                                            }
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {
+                                                                etudiant.telephone1
+                                                            }
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {
+                                                                etudiant.telephone2
+                                                            }
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            {
+                                                                etudiant.classe
+                                                                    .intitule
+                                                            }
+                                                        </td>
+                                                        <td className="px-3 py-3">
+                                                            <span
+                                                                className={
+                                                                    "px-2 py-1 rounded text-white " +
+                                                                    ETUDIANT_STATUS_CLASS_MAP[
+                                                                        etudiant
+                                                                            .status
+                                                                    ]
+                                                                }
+                                                            >
+                                                                {
+                                                                    ETUDIANT_STATUS_TEXT_MAP[
+                                                                        etudiant
+                                                                            .status
+                                                                    ]
+                                                                }
+                                                            </span>
+                                                        </td>
 
-                                                    <td className="px-3 py-4 flex gap-2">
-                                                        <Link
-                                                            href={route(
-                                                                "etudiant.edit",
-                                                                etudiant.id
-                                                            )}
-                                                            className=" font-medium text-green-500 dark:text-blue-500 hover:text-underline mx-1 "
-                                                        >
-                                                            <HiOutlinePencilSquare />
-                                                        </Link>
-                                                        <Link
-                                                            href={route(
-                                                                "etudiant.destroy",
-                                                                etudiant.id
-                                                            )}
-                                                            className=" font-medium text-red-600 dark:text-red-500 hover:text-underline mx-1 "
-                                                        >
-                                                            <RiDeleteBin6Line />
-                                                        </Link>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                                        <td className="px-3 py-4 flex gap-2">
+                                                            <Link
+                                                                href={route(
+                                                                    "admin.etudiant.edit",
+                                                                    etudiant.id
+                                                                )}
+                                                                className=" font-medium text-green-500 dark:text-blue-500 hover:text-underline mx-1 "
+                                                            >
+                                                                <HiOutlinePencilSquare />
+                                                            </Link>
+                                                            <button
+                                                                onClick={() =>
+                                                                    deleteStudent(
+                                                                        etudiant
+                                                                    )
+                                                                }
+                                                                className=" font-medium text-red-600 dark:text-red-500 hover:text-underline mx-1 "
+                                                            >
+                                                                <RiDeleteBin6Line />
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

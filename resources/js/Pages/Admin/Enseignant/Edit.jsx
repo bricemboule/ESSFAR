@@ -22,14 +22,16 @@ function Edit({ auth, enseignant }) {
         telephone1: enseignant.data.telephone1 || "",
         telephone2: enseignant.data.telephone2 || "",
         dateNaissance: enseignant.data.dateNaissance || "",
-        lieu_naissance: enseignant.data.lieu_naissance || "",
-        email: enseignant.data.email || "",
+        lieuNaissance: enseignant.data.lieuNaissance || "",
+        email: enseignant.data.user.email || "",
         grade: enseignant.data.grade || "",
         status: "",
     });
     const onSubmit = (e) => {
         e.preventDefault();
-        put(route("enseignant.update", enseignant.data.id));
+        console.log("bonjour");
+        put(route("admin.enseignant.update", enseignant.data.id));
+        console.log("bonsoir");
     };
     return (
         <ThemeContextProvider>
@@ -59,7 +61,6 @@ function Edit({ auth, enseignant }) {
 
                                             <TextInput
                                                 id="nom"
-                                                type="text"
                                                 className="mt-1 block w-full"
                                                 value={data.nom}
                                                 onChange={(e) =>
@@ -69,7 +70,6 @@ function Edit({ auth, enseignant }) {
                                                     )
                                                 }
                                                 required
-                                                isFocused
                                             />
 
                                             <InputError
@@ -85,7 +85,6 @@ function Edit({ auth, enseignant }) {
 
                                             <TextInput
                                                 id="prenom"
-                                                type="text"
                                                 className="mt-1 block w-full"
                                                 value={data.prenom}
                                                 onChange={(e) =>
@@ -95,7 +94,6 @@ function Edit({ auth, enseignant }) {
                                                     )
                                                 }
                                                 required
-                                                isFocused
                                             />
 
                                             <InputError
@@ -123,12 +121,11 @@ function Edit({ auth, enseignant }) {
                                                     )
                                                 }
                                                 required
-                                                isFocused
                                             />
 
                                             <InputError
                                                 className="mt-2"
-                                                message={errors.telephone}
+                                                message={errors.telephone1}
                                             />
                                         </div>
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
@@ -147,12 +144,11 @@ function Edit({ auth, enseignant }) {
                                                         e.target.value
                                                     )
                                                 }
-                                                isFocused
                                             />
 
                                             <InputError
                                                 className="mt-2"
-                                                message={errors.telephone}
+                                                message={errors.telephone2}
                                             />
                                         </div>
                                     </div>
@@ -161,12 +157,11 @@ function Edit({ auth, enseignant }) {
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
                                                 htmlFor="dateNaissance"
-                                                value="Date de Naissance"
+                                                value="Date Naissance"
                                             />
 
                                             <TextInput
                                                 id="dateNaissance"
-                                                type="date"
                                                 className="mt-1 block w-full"
                                                 value={data.dateNaissance}
                                                 onChange={(e) =>
@@ -176,7 +171,6 @@ function Edit({ auth, enseignant }) {
                                                     )
                                                 }
                                                 required
-                                                isFocused
                                             />
 
                                             <InputError
@@ -186,28 +180,26 @@ function Edit({ auth, enseignant }) {
                                         </div>
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
-                                                htmlFor="lieu_naissance"
-                                                value="Lieu de naissance"
+                                                htmlFor="lieuNaissance"
+                                                value="Lieu Naissance"
                                             />
 
                                             <TextInput
-                                                id="lieu_naissance"
-                                                type="text"
+                                                id="lieuNaissance"
                                                 className="mt-1 block w-full"
-                                                value={data.lieu_naissance}
+                                                value={data.lieuNaissance}
                                                 onChange={(e) =>
                                                     setData(
-                                                        "lieu_naissance",
+                                                        "lieuNaissance",
                                                         e.target.value
                                                     )
                                                 }
                                                 required
-                                                isFocused
                                             />
 
                                             <InputError
                                                 className="mt-2"
-                                                message={errors.lieu_naissance}
+                                                message={errors.lieuNaissance}
                                             />
                                         </div>
                                     </div>
@@ -221,7 +213,6 @@ function Edit({ auth, enseignant }) {
 
                                             <TextInput
                                                 id="email"
-                                                type="email"
                                                 className="mt-1 block w-full"
                                                 value={data.email}
                                                 onChange={(e) =>
@@ -231,7 +222,6 @@ function Edit({ auth, enseignant }) {
                                                     )
                                                 }
                                                 required
-                                                isFocused
                                             />
 
                                             <InputError
@@ -241,13 +231,12 @@ function Edit({ auth, enseignant }) {
                                         </div>
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
-                                                htmlFor="Poste de responsabilite"
-                                                value="Poste de responsabilite"
+                                                htmlFor="grade"
+                                                value="Grade"
                                             />
 
                                             <SelectInput
                                                 id="grade"
-                                                name="grade"
                                                 value={data.grade}
                                                 className="mt-1 block w-full"
                                                 onChange={(e) =>
@@ -258,7 +247,9 @@ function Edit({ auth, enseignant }) {
                                                 }
                                                 required
                                             >
-                                                <option value=""></option>
+                                                <option value={data.grade}>
+                                                    {data.grade}
+                                                </option>
                                                 <option value="Pr">
                                                     Professeur
                                                 </option>

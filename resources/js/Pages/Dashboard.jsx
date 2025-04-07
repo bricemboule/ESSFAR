@@ -5,10 +5,15 @@ import { Head } from "@inertiajs/react";
 import { useState } from "react";
 //import ThemeContextProvider from "./context/ThemeContextProvider";
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({
+    auth,
+    nombreClasse,
+    nombreEtudiant,
+    nombreEnseignant,
+}) {
     const [darkMode, setDarkMode] = useState(false);
     const [isSideBarOpen, setIsSideOpen] = useState(false);
-
+    console.log(auth);
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
@@ -30,17 +35,11 @@ export default function Dashboard({ auth }) {
             >
                 <Head title="Dashboard" />
 
-                {/*<div className={`${darkMode && "dark"} `}>
-                <Header
-                    toggleDarkMode={toggleDarkMode}
-                    toggleIsSideBarOpen={toggleIsSideBarOpen}
-                    darkMode={darkMode}
+                <Section
+                    nombreEtudiant={nombreEtudiant}
+                    nombreEnseignant={nombreEnseignant}
+                    nombreClasse={nombreClasse}
                 />
-                <Sidebar isSideBarOpen={isSideBarOpen} />
-
-                
-            </div>*/}
-                <Section />
             </AuthenticatedLayout>
         </ThemeContextProvider>
     );

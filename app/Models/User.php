@@ -17,13 +17,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'nom', 
-        'prenom',
-        'telephone1',
+        
         'email', 
-        'password', 
+        'password',
+        'role_id', 
         'status', 
-        'role'
     ];
 
     /**
@@ -49,7 +47,23 @@ class User extends Authenticatable
         ];
     }
 
+    public function etudiant(){
+        return $this->hasOne(Etudiant::class);
+    }
+
+    public function enseignant(){
+        return $this->hasOne(Enseignant::class);
+    }
+
+    public function personnel(){
+        return $this->hasOne(Personnel::class);
+    }
+
     public function role(){
         return $this->belongsTo(Role::class);
+    }
+
+    public function hasRole($role){
+        return $this->role()->where('nom_role', $role)->first() !== null;
     }
 }

@@ -24,9 +24,10 @@ class EtudiantResource extends JsonResource
             'lieuNaissance' => $this->lieuNaissance,
             'telephone1' => $this->telephone1,
             'telephone2' => $this->telephone2,
-            'email' => $this->email,
-            'classe' => $this->classe,
-            'status' => $this->status
+            'matricule' => $this->matricule,
+            'classe' => $this->classes,
+            'status' => $this->status,
+            'user' => $this->user
         ];
     }
 }

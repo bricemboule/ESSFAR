@@ -4,7 +4,6 @@ import ThemeContextProvider from "@/context/ThemeContextProvider";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
-import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 function Index({ auth, roles, success }) {
     const deleteRole = (role) => {
@@ -36,8 +35,7 @@ function Index({ auth, roles, success }) {
                             <div className="flex gap-2 pt-4 px-4">
                                 <Link href={route("role.create")}>
                                     <PrimaryButton>
-                                        <IoMdAdd size={40} />
-                                        Ajouter Role
+                                        Ajouter un role
                                     </PrimaryButton>
                                 </Link>
                             </div>
