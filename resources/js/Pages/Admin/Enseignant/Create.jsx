@@ -1,3 +1,4 @@
+import DateInput from "@/Components/DateInput";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
@@ -22,14 +23,15 @@ function Create({ auth }) {
         telephone1: "",
         telephone2: "",
         dateNaissance: "",
-        lieu_naissance: "",
+        lieuNaissance: "",
         email: "",
         grade: "",
         status: "",
     });
     const onSubmit = (e) => {
         e.preventDefault();
-        post(route("enseignant.store"));
+        post(route("admin.enseignant.store"));
+        console.log(errors);
     };
     return (
         <ThemeContextProvider>
@@ -54,13 +56,20 @@ function Create({ auth }) {
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
                                                 htmlFor="nom"
-                                                value="Nom"
+                                                value={
+                                                    <>
+                                                        Nom {""}
+                                                        <span className="text-red-500">
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
                                             />
 
                                             <TextInput
                                                 id="nom"
                                                 type="text"
-                                                className="mt-1 block w-full"
+                                                className="mt-1 block w-full p-2 border-2"
                                                 value={data.nom}
                                                 onChange={(e) =>
                                                     setData(
@@ -80,13 +89,20 @@ function Create({ auth }) {
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
                                                 htmlFor="prenom"
-                                                value="Prenom"
+                                                value={
+                                                    <>
+                                                        Prénom{" "}
+                                                        <span className="text-red-500">
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
                                             />
 
                                             <TextInput
                                                 id="prenom"
                                                 type="text"
-                                                className="mt-1 block w-full"
+                                                className="mt-1 block w-full p-2 border-2"
                                                 value={data.prenom}
                                                 onChange={(e) =>
                                                     setData(
@@ -108,66 +124,20 @@ function Create({ auth }) {
                                     <div className="sm:flex-cols md:flex lg:flex xl:flex gap-2 ">
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
-                                                htmlFor="telephone1"
-                                                value="Telephone 1"
-                                            />
-
-                                            <TextInput
-                                                id="telephone1"
-                                                className="mt-1 block w-full"
-                                                value={data.telephone1}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "telephone1",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                required
-                                                isFocused
-                                            />
-
-                                            <InputError
-                                                className="mt-2"
-                                                message={errors.telephone}
-                                            />
-                                        </div>
-                                        <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
-                                            <InputLabel
-                                                htmlFor="telephone2"
-                                                value="Telephone 2"
-                                            />
-
-                                            <TextInput
-                                                id="telephone2"
-                                                className="mt-1 block w-full"
-                                                value={data.telephone2}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "telephone2",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                isFocused
-                                            />
-
-                                            <InputError
-                                                className="mt-2"
-                                                message={errors.telephone}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="sm:flex-cols md:flex lg:flex xl:flex gap-2 ">
-                                        <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
-                                            <InputLabel
                                                 htmlFor="dateNaissance"
-                                                value="Date de Naissance"
+                                                value={
+                                                    <>
+                                                        Date Naissance{" "}
+                                                        <span className="text-red-500">
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
                                             />
 
-                                            <TextInput
+                                            <DateInput
                                                 id="dateNaissance"
-                                                type="date"
-                                                className="mt-1 block w-full"
+                                                className="mt-1 block w-full p-2 border-2"
                                                 value={data.dateNaissance}
                                                 onChange={(e) =>
                                                     setData(
@@ -186,18 +156,25 @@ function Create({ auth }) {
                                         </div>
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
-                                                htmlFor="lieu_naissance"
-                                                value="Lieu de naissance"
+                                                htmlFor="lieuNaissance"
+                                                value={
+                                                    <>
+                                                        Lieu Naissance{" "}
+                                                        <span className="text-red-500">
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
                                             />
 
                                             <TextInput
-                                                id="lieu_naissance"
+                                                id="lieuNaissance"
                                                 type="text"
-                                                className="mt-1 block w-full"
-                                                value={data.lieu_naissance}
+                                                className="mt-1 block w-full p-2 border-2"
+                                                value={data.lieuNaissance}
                                                 onChange={(e) =>
                                                     setData(
-                                                        "lieu_naissance",
+                                                        "lieuNaissance",
                                                         e.target.value
                                                     )
                                                 }
@@ -207,7 +184,66 @@ function Create({ auth }) {
 
                                             <InputError
                                                 className="mt-2"
-                                                message={errors.lieu_naissance}
+                                                message={errors.lieuNaissance}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="sm:flex-cols md:flex lg:flex xl:flex gap-2 ">
+                                        <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
+                                            <InputLabel
+                                                htmlFor="telephone1"
+                                                value={
+                                                    <>
+                                                        Téléphone 1{" "}
+                                                        <span className="text-red-500">
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
+                                            />
+
+                                            <TextInput
+                                                id="telephone1"
+                                                className="mt-1 block w-full p-2 border-2"
+                                                value={data.telephone1}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "telephone1",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required
+                                                isFocused
+                                            />
+
+                                            <InputError
+                                                className="mt-2"
+                                                message={errors.telephone1}
+                                            />
+                                        </div>
+                                        <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
+                                            <InputLabel
+                                                htmlFor="telephone2"
+                                                value="Telephone 2"
+                                            />
+
+                                            <TextInput
+                                                id="telephone2"
+                                                className="mt-1 block w-full p-2 border-2"
+                                                value={data.telephone2}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "telephone2",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                isFocused
+                                            />
+
+                                            <InputError
+                                                className="mt-2"
+                                                message={errors.telephone2}
                                             />
                                         </div>
                                     </div>
@@ -216,13 +252,19 @@ function Create({ auth }) {
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
                                                 htmlFor="email"
-                                                value="Email"
+                                                value={
+                                                    <>
+                                                        Email{" "}
+                                                        <span className="text-red-500">
+                                                            *
+                                                        </span>
+                                                    </>
+                                                }
                                             />
 
                                             <TextInput
                                                 id="email"
-                                                type="email"
-                                                className="mt-1 block w-full"
+                                                className="mt-1 block w-full p-2 border-2"
                                                 value={data.email}
                                                 onChange={(e) =>
                                                     setData(
@@ -241,14 +283,23 @@ function Create({ auth }) {
                                         </div>
                                         <div className="lg:w-1/2 xl:w-1/2 md:w-1/2 sm:w-full">
                                             <InputLabel
-                                                htmlFor="Poste de responsabilite"
-                                                value="Poste de responsabilite"
+                                                htmlFor="grade"
+                                                value={
+                                                    <>
+                                                        Grade{" "}
+                                                        <>
+                                                            <span className="text-red-500">
+                                                                *
+                                                            </span>
+                                                        </>
+                                                    </>
+                                                }
                                             />
 
                                             <SelectInput
                                                 id="grade"
                                                 name="grade"
-                                                className="mt-1 block w-full"
+                                                className="mt-1 block w-full p-2 border-2"
                                                 onChange={(e) =>
                                                     setData(
                                                         "grade",
@@ -260,6 +311,9 @@ function Create({ auth }) {
                                                 <option value=""></option>
                                                 <option value="Pr">
                                                     Professeur
+                                                </option>
+                                                <option value="MC">
+                                                    Maitre de Conference
                                                 </option>
                                                 <option value="CC">
                                                     Charger de cours
@@ -274,7 +328,7 @@ function Create({ auth }) {
 
                                             <InputError
                                                 className="mt-2"
-                                                message={errors.description}
+                                                message={errors.grade}
                                             />
                                         </div>
                                     </div>

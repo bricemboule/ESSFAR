@@ -11,10 +11,10 @@ export default function UpdateProfileInformation({
     className = "",
 }) {
     const user = usePage().props.auth.user;
-
+    console.log(user);
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
-            name: user.name,
+            nom: user.personnel.nom,
             email: user.email,
         });
 
@@ -44,14 +44,13 @@ export default function UpdateProfileInformation({
                     <TextInput
                         id="name"
                         className="mt-1 block w-full"
-                        value={data.name}
+                        value={data.nom}
                         onChange={(e) => setData("name", e.target.value)}
                         required
                         isFocused
                         autoComplete="name"
                     />
-
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.nom} />
                 </div>
 
                 <div>

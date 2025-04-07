@@ -22,11 +22,20 @@ class UpdateCourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'intitule' => ['required', 'string'],
-            'volumeHoraire' => ['required', 'float'],
-            'effectue' => ['required', 'float'],
-            'restant' => ['required', 'float'],
+            'intitule' =>  'required|regex:/^[a-zA-ZÀ-ÖØ-öø-ÿ][a-zA-Z0-9À-ÖØ-öø-ÿ\s\-]*$/|max:255',
+            'volume_horaire' => 'required|regex:/^\d+(,\d+)?$',
+          
             
+        ];
+    }
+
+    public function messages(){
+        return [
+            'intitule.required' => 'L intitulé est obligatoire.',
+            'intitule.regex' => 'L intitulé doit commencer par une lettre et peut inclure des chiffres, des espaces et des tirets.',
+
+            'volume_horaire.required' => 'Le volume horaire est obligatoire',
+            'volume_horaire.regex' => 'Le volume horaire doit etre un decimal'
         ];
     }
 }

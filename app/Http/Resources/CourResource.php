@@ -14,15 +14,15 @@ class CourResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        
         return [
             'id' => $this->id,
-            'intitule' => $this->intutile,
-            'volumeHoraire' => $this->volumeHoraire,
-            'effectue' => $this->effectue,
-            'restant' => $this->restant,
+            'intitule' => $this->intitule,
+            'volume_horaire' =>$this->volume_horaire,
             'status' => $this->status,
-            'enseignant' => $this->enseignant
+            'classe' => $this->classes,
+            'enseignant' => $this->enseignant,
+            'semestre' => $this->semestre,
+            'ressources' => $this->ressources
         ];
     }
 }

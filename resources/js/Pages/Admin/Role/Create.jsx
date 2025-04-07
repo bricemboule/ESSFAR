@@ -39,20 +39,21 @@ function Create({ auth }) {
                 <div className="py-12">
                     <div className="max-w-7xl max-auto sm:px-6 lg:px-8">
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shaddow-sm sm:rounded-lg">
-                            <div className="flex gap-6 pt-4 px-4">
+                            <div className="pt-4 px-4 w-112">
                                 <form
                                     onSubmit={onSubmit}
                                     className="mt-6 space-y-6"
                                 >
-                                    <div>
+                                    <div className="text-xl font-bold">
                                         <InputLabel
                                             htmlFor="nom_role"
                                             value="Nom"
+                                            className=""
                                         />
 
                                         <TextInput
                                             id="nom_role"
-                                            className="mt-1 block w-full"
+                                            className="mt-1 block w-3/5"
                                             value={data.nom_role}
                                             onChange={(e) =>
                                                 setData(
@@ -70,16 +71,17 @@ function Create({ auth }) {
                                         />
                                     </div>
 
-                                    <div>
+                                    <div className="text-xl font-bold">
                                         <InputLabel
                                             htmlFor="description"
                                             value="Description"
+                                            className="text-sm bold"
                                         />
 
                                         <TextAreaInput
                                             id="description"
                                             type="text"
-                                            className="mt-1 block w-full"
+                                            className="mt-1 block w-3/5"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
@@ -96,9 +98,9 @@ function Create({ auth }) {
                                         />
                                     </div>
 
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-4 py-2">
                                         <PrimaryButton>
-                                            Créer un role
+                                            Enregistrer
                                         </PrimaryButton>
                                     </div>
                                 </form>

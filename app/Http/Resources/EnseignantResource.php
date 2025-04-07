@@ -19,12 +19,12 @@ class EnseignantResource extends JsonResource
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'dateNaissance' => $this->dateNaissance,
-            'lieu_naissance' => $this->lieu_naissance,
+            'lieuNaissance' => $this->lieuNaissance,
+            'grade' => $this->grade,
             'telephone1' => $this->telephone1,
             'telephone2' => $this->telephone2,
-            'email' => $this->email,
-            'grade' => $this->grade,
-            'status' => $this->status
-        ]; ;
+            'user' => $this->user,
+            'cours' => $this->cours
+        ];
     }
 }

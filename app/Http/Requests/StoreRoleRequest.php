@@ -22,8 +22,10 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nom_role"=>['required','max:255'],
-            "description"=> ['string']
+            "nom_role"=>['required','min:5','regex:/^[A-Za-z\s]+$/'],
+            "description"=> ['string', 'regex:/^[A-Za-z\s]+$/']
         ];
     }
+
+
 }

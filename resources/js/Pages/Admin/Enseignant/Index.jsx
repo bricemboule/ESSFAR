@@ -3,21 +3,20 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
-import { USER_STATUS_CLASS_MAP, USER_STATUS_TEXT_MAP } from "@/Constante";
 import ThemeContextProvider from "@/context/ThemeContextProvider";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
-import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Index({ auth, enseignants, queryParams = null }) {
+    console.log(enseignants);
     queryParams = queryParams || {};
     const deleteEnseignant = (enseignant) => {
         if (!window.confirm("Voulez vous supprimer cet enseignant ?")) {
             return;
         }
-        router.delete(route("enseignant.destroy", enseignant.id));
+        router.delete(route("admin.enseignant.destroy", enseignant.id));
     };
 
     const searcheFieldChanged = (name, value) => {
@@ -27,7 +26,7 @@ function Index({ auth, enseignants, queryParams = null }) {
             delete queryParams[name];
         }
 
-        router.get(route("enseignant.index", queryParams));
+        router.get(route("admin.enseignant.index", queryParams));
     };
 
     const onKeyPress = (name, e) => {
@@ -48,7 +47,7 @@ function Index({ auth, enseignants, queryParams = null }) {
             queryParams.sort_direction = "asc";
         }
 
-        router.get(route("enseignant.index", queryParams));
+        router.get(route("admin.enseignant.index", queryParams));
     };
 
     return (
@@ -66,10 +65,9 @@ function Index({ auth, enseignants, queryParams = null }) {
                     <div className="max-w-7xl max-auto sm:px-6 lg:px-8">
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shaddow-sm sm:rounded-lg">
                             <div className="flex gap-2 p-2 text-xl">
-                                <Link href={route("enseignant.create")}>
+                                <Link href={route("admin.enseignant.create")}>
                                     <PrimaryButton>
-                                        <IoMdAdd size={30} />
-                                        Nouvel Enseignant
+                                        Ajouter un enseignant
                                     </PrimaryButton>
                                 </Link>
                             </div>
@@ -113,7 +111,6 @@ function Index({ auth, enseignants, queryParams = null }) {
 
                                                 <th className="p-3">Grade</th>
                                                 <th className="p-3">Cours</th>
-                                                <th className="p-3">Status</th>
 
                                                 <th className="px-3 py-3">
                                                     Actions
@@ -126,7 +123,7 @@ function Index({ auth, enseignants, queryParams = null }) {
 
                                                 <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         placeholder="..."
                                                         defaultValue={
                                                             queryParams.name
@@ -148,7 +145,7 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                 <th className="px-3 py-3"></th>
                                                 <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         placeholder="..."
                                                         defaultValue={
                                                             queryParams.name
@@ -170,7 +167,7 @@ function Index({ auth, enseignants, queryParams = null }) {
 
                                                 <th className="p-3">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         placeholder="..."
                                                         defaultValue={
                                                             queryParams.name
@@ -192,7 +189,7 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                 <th className="p-3"></th>
                                                 <th className="px-3 py-3">
                                                     <SelectInput
-                                                        className="w-full"
+                                                        className="w-full p-2 border-2"
                                                         defaultValue={
                                                             queryParams.status
                                                         }
@@ -226,7 +223,7 @@ function Index({ auth, enseignants, queryParams = null }) {
 
                                                 <th className="px-3 py-3"></th>
 
-                                                <th className="p-3">
+                                                {/*<th className="p-3">
                                                     <SelectInput
                                                         className="w-full"
                                                         defaultValue={
@@ -269,15 +266,15 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                             M2 SBD
                                                         </option>
                                                     </SelectInput>
-                                                </th>
+                                                </th>*/}
                                             </tr>
                                         </thead>
 
                                         <tbody>
                                             {enseignants.data.map(
-                                                (enseignant) => (
+                                                (enseignant, index) => (
                                                     <tr
-                                                        key={enseignant.id}
+                                                        key={index + 1}
                                                         className="bg-white text-sm border-b dark:bg-gray-800 dark:border-gray-700"
                                                     >
                                                         <td className="px-3 py-3">
@@ -291,7 +288,10 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                         </td>
 
                                                         <td className="px-3 py-3">
-                                                            {enseignant.email}
+                                                            {
+                                                                enseignant.user
+                                                                    .email
+                                                            }
                                                         </td>
 
                                                         <td className="p-3">
@@ -308,33 +308,19 @@ function Index({ auth, enseignants, queryParams = null }) {
                                                             {enseignant.grade}
                                                         </th>
                                                         <th className="p-3">
-                                                            <button className="text-green-500">
-                                                                Liste de cours
-                                                            </button>
+                                                            {enseignant.cours
+                                                                .map(
+                                                                    (cr) =>
+                                                                        cr.intitule +
+                                                                        ""
+                                                                )
+                                                                .join("")}
                                                         </th>
-                                                        <td className="px-3 py-3">
-                                                            <span
-                                                                className={
-                                                                    "px-2 py-1 rounded text-white " +
-                                                                    USER_STATUS_CLASS_MAP[
-                                                                        enseignant
-                                                                            .status
-                                                                    ]
-                                                                }
-                                                            >
-                                                                {
-                                                                    USER_STATUS_TEXT_MAP[
-                                                                        enseignant
-                                                                            .status
-                                                                    ]
-                                                                }
-                                                            </span>
-                                                        </td>
 
                                                         <td className="px-3 py-4 flex gap-2">
                                                             <Link
                                                                 href={route(
-                                                                    "enseignant.edit",
+                                                                    "admin.enseignant.edit",
                                                                     enseignant.id
                                                                 )}
                                                                 className=" font-medium text-green-500 dark:text-blue-500 hover:text-underline mx-1 "

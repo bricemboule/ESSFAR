@@ -9,13 +9,40 @@ class Classe extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'intitule', 'cycle','status'
+        'intitule','specialite', 'cycle_id','status'
     ];
-    public function documents(){
-        return $this->hasMany(Document::class);
+
+    public function ressources(){
+        return $this->belongsToMany(Ressource::class)
+                    ->withTimestamps();
     }
 
-    public function etudiants(){
-        return $this->hasMany(Classe::class);
+    public function cycle(){
+        return $this->belongsTo(Cycle::class);
     }
+
+    public function sanctions(){
+        return $this->hasMany(Santion::class);
+    }
+    
+    public function etudiants(){
+        return $this->belongsToMany(Etudiant::class, 'classe_etudiant')
+                            ->withPivot('annee_academique')
+                            ->withTimestamps();
+    }
+
+    public function cours(){
+        return $this->belongsToMany(Cour::class); 
+    }
+
+    public function projets(){
+        return $this->belongsToMany(Projet::class)
+                    ->withTimestamps();
+    }
+    
+    public function devoirs(){
+        return $this->belongsToMany(Devoir::class)
+                    ->withTimestamps();
+    }
+
 }
